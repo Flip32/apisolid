@@ -24,7 +24,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       return reply.status(409).send({ message: e.message })
     }
 
-    return reply.status(500).send() // TODO: Implementar um erro genérico
+    throw e
   }
 
   return reply.status(201).send()
