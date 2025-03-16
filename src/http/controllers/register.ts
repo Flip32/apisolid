@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { RegisterUseCase } from '@/use-cases/register'
 import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository'
+import { UserAlreadyExistsErros } from '@/use-cases/erros/user-already-exists-erros'
 // import { InMemoryUsersRepository } from '@/repositories/in-memory-users-repository'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
@@ -19,7 +20,11 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     const registerUseCase = new RegisterUseCase(prismaUserRepository)
     await registerUseCase.execute({ name, email, password })
   } catch (e) {
-    return reply.status(409).send()
+    if (e instanceof UserAlreadyExistsErros) {
+      return reply.status(409).send({ message: e.message })
+    }
+
+    return reply.status(500).send() // TODO: Implementar um erro genérico
   }
 
   return reply.status(201).send()
