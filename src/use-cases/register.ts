@@ -1,6 +1,7 @@
 import { hash } from 'bcryptjs'
 import { UsersRepository } from '@/repositories/users.repository'
 import { UserAlreadyExistsErros } from '@/use-cases/erros/user-already-exists-erros'
+import { User } from '@prisma/client'
 
 interface RegisterUseCaseRequest {
   name: string
@@ -8,13 +9,25 @@ interface RegisterUseCaseRequest {
   password: string
 }
 
+interface RegisterUseCaseResponse {
+  user: User
+}
 // SOLID
 // D - Dependency Inversion Principle
 
 export class RegisterUseCase {
+  /*
+   *  O usersRepository é uma dependência do RegisterUseCase criada para lidar com a persistência de dados.
+   * Assim além de desacoplar a lógica de negócio da lógica de persistência, também facilita a substituição por uma nova tecnologia.
+   * Além de facilitar os Testes Unitários, pois podemos criar um Mock do UsersRepository para simular o comportamento do banco de dados.
+   * */
   constructor(private usersRepository: UsersRepository) {}
 
-  async execute({ name, password, email }: RegisterUseCaseRequest) {
+  async execute({
+    name,
+    password,
+    email,
+  }: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
     const password_hash = await hash(password, 6)
 
     const userWithSameEmail = await this.usersRepository.findByEmail(email)
@@ -24,10 +37,14 @@ export class RegisterUseCase {
     }
 
     // const prismaUserRepository = new PrismaUsersRepository()
-    await this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name,
       email,
       password_hash,
     })
+
+    return {
+      user,
+    }
   }
 }
