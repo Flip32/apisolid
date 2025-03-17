@@ -1,9 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
-import { RegisterUseCase } from '@/use-cases/register'
-import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository'
 import { UserAlreadyExistsError } from '@/use-cases/erros/user-already-exists-error'
-// import { InMemoryUsersRepository } from '@/repositories/in-memory-users-repository'
+import { makeRegisterUseCase } from '@/use-cases/factories/make-register-use-case'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({
@@ -15,9 +13,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
   const { name, email, password } = registerBodySchema.parse(request.body)
 
   try {
-    const prismaUserRepository = new PrismaUsersRepository()
-    // const prismaUserRepository = new InMemoryUsersRepository() // Usando o princípio da inversão de dependência (SOLID), podemos trocar a implementação do repositório sem alterar o código do controller
-    const registerUseCase = new RegisterUseCase(prismaUserRepository)
+    const registerUseCase = makeRegisterUseCase()
     await registerUseCase.execute({ name, email, password })
   } catch (e) {
     if (e instanceof UserAlreadyExistsError) {
