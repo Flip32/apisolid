@@ -7,8 +7,7 @@ interface GetUserMetricsUseResponse {
   checkInsCount: number
 }
 
-// TODO: Alterar o nome da classe para GetUserMetricsUseCase
-export class GetUserMetricsUse {
+export class GetUserMetricsUseCase {
   constructor(private checkInsRepository: CheckInsRepository) {}
 
   async execute({
