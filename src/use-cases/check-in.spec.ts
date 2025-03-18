@@ -1,21 +1,22 @@
 import { beforeEach, expect, describe, it, vi, afterEach } from 'vitest'
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
 import { CheckInUseCase } from '@/use-cases/check-in'
-import { InMemoryGymRepository } from '@/repositories/in-memory/in-memory-gym-repository'
+import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gym-repository'
 import { Decimal } from '@prisma/client/runtime/client'
+import { MaxDistanceError } from '@/use-cases/erros/max-distance-error'
+import { MaxNumberOfCheckInsError } from '@/use-cases/erros/max-number-of-check-ins-error'
 
 let userRepository: InMemoryCheckInsRepository
-let gymsRepository: InMemoryGymRepository
+let gymsRepository: InMemoryGymsRepository
 let sut: CheckInUseCase
 
 describe('Check-in Use Case', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     userRepository = new InMemoryCheckInsRepository()
-    gymsRepository = new InMemoryGymRepository()
+    gymsRepository = new InMemoryGymsRepository()
     sut = new CheckInUseCase(userRepository, gymsRepository)
 
-    // TODO: Remover quando criar o metodo create no repositorio
-    gymsRepository.items.push({
+    await gymsRepository.create({
       id: 'gym-01',
       title: 'Academia 01',
       description: 'Melhor academia de bairro',
@@ -62,7 +63,7 @@ describe('Check-in Use Case', () => {
         userLatitude: -15.8000152,
         userLongitude: -47.8667287,
       }),
-    ).rejects.toBeInstanceOf(Error) // TODO: Create a custom error (CheckInAlreadyExistsError)
+    ).rejects.toBeInstanceOf(MaxNumberOfCheckInsError)
   })
 
   it('should be able to check in twice but in different days', async () => {
@@ -89,8 +90,7 @@ describe('Check-in Use Case', () => {
     // -15.8000152,-47.8667287
     // -15.7946674,-47.8950178
 
-    // TODO: Remover quando criar o metodo create no repositorio
-    gymsRepository.items.push({
+    await gymsRepository.create({
       id: 'gym-02',
       title: 'Academia 01',
       description: 'Melhor academia de bairro',
@@ -106,6 +106,6 @@ describe('Check-in Use Case', () => {
         userLongitude: -15.7946674,
         userLatitude: -47.8950178,
       }),
-    ).rejects.toBeInstanceOf(Error) // TODO: Create a custom error
+    ).rejects.toBeInstanceOf(MaxDistanceError)
   })
 })
