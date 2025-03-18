@@ -2,7 +2,7 @@ import { expect, describe, it, beforeEach } from 'vitest'
 import { hash } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { AuthenticateUseCase } from '@/use-cases/authenticate'
-import { InvalidCredentialsError } from '@/use-cases/erros/invalid-credentials-error'
+import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials-error'
 
 let userRepository: InMemoryUsersRepository
 // System Under Test (Convenção de nomenclatura usada bastante em Test-Driven Development (TDD))

@@ -2,7 +2,7 @@ import { expect, describe, it, beforeEach } from 'vitest'
 import { hash } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { GetUserProfileUseCase } from '@/use-cases/get-user-profile'
-import { ResourceNotFoundError } from '@/use-cases/erros/resource-not-found-error'
+import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error'
 
 let userRepository: InMemoryUsersRepository
 // System Under Test (Convenção de nomenclatura usada bastante em Test-Driven Development (TDD))
