@@ -6,15 +6,15 @@ import { Decimal } from '@prisma/client/runtime/client'
 import { MaxDistanceError } from '@/use-cases/erros/max-distance-error'
 import { MaxNumberOfCheckInsError } from '@/use-cases/erros/max-number-of-check-ins-error'
 
-let userRepository: InMemoryCheckInsRepository
+let checkInsRepository: InMemoryCheckInsRepository
 let gymsRepository: InMemoryGymsRepository
 let sut: CheckInUseCase
 
 describe('Check-in Use Case', () => {
   beforeEach(async () => {
-    userRepository = new InMemoryCheckInsRepository()
+    checkInsRepository = new InMemoryCheckInsRepository()
     gymsRepository = new InMemoryGymsRepository()
-    sut = new CheckInUseCase(userRepository, gymsRepository)
+    sut = new CheckInUseCase(checkInsRepository, gymsRepository)
 
     await gymsRepository.create({
       id: 'gym-01',
