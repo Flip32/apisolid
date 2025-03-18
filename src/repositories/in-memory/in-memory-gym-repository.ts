@@ -1,6 +1,7 @@
 import { Gym, Prisma } from '@prisma/client'
 import { GymsRepository } from '@/repositories/gyms-repository'
 import { randomUUID } from 'node:crypto'
+import { normalize } from '@/utils/normalize'
 
 export class InMemoryGymsRepository implements GymsRepository {
   private items: Gym[] = []
@@ -25,5 +26,13 @@ export class InMemoryGymsRepository implements GymsRepository {
     this.items.push(gym)
 
     return gym
+  }
+
+  async searchMany(query: string, page: number): Promise<Gym[]> {
+    const normalizedTitle = normalize(query)
+
+    return this.items
+      .filter((gym) => normalize(gym.title).includes(normalizedTitle))
+      .slice((page - 1) * 20, page * 20)
   }
 }
