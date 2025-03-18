@@ -4,14 +4,14 @@ import { UsersRepository } from '@/repositories/users.repository'
 
 /* Repository Pattern */
 export class PrismaUsersRepository implements UsersRepository {
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string) {
     const user = await prisma.user.findFirst({
       where: {
         id,
       },
     })
 
-    return user || null
+    return user
   }
 
   async findByEmail(email: string) {
