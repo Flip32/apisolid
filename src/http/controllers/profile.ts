@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
-  // const { user } = request
+  await request.jwtVerify()
 
-  // return reply.send({ user })
+  console.log(request.user.sub)
+
   return reply.status(200).send()
 }
