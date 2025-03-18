@@ -1,4 +1,3 @@
-import { CheckIn } from '@prisma/client'
 import { CheckInsRepository } from '@/repositories/check-ins-repository'
 
 interface GetUserMetricsUseCaseRequest {
@@ -8,6 +7,7 @@ interface GetUserMetricsUseResponse {
   checkInsCount: number
 }
 
+// TODO: Alterar o nome da classe para GetUserMetricsUseCase
 export class GetUserMetricsUse {
   constructor(private checkInsRepository: CheckInsRepository) {}
 
