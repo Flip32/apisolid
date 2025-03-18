@@ -20,8 +20,8 @@ describe('Check-in Use Case', () => {
       title: 'Academia 01',
       description: 'Melhor academia de bairro',
       phone: '123456789',
-      latitude: new Decimal(0),
-      longitude: new Decimal(0),
+      latitude: new Decimal(-15.8000152),
+      longitude: new Decimal(-47.8667287),
     })
 
     vi.useFakeTimers()
@@ -35,8 +35,8 @@ describe('Check-in Use Case', () => {
     const { checkIn } = await sut.execute({
       gymId: 'gym-01',
       userId: 'user-01',
-      userLongitude: 0,
-      userLatitude: 0,
+      userLatitude: -15.8000152,
+      userLongitude: -47.8667287,
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
@@ -49,8 +49,8 @@ describe('Check-in Use Case', () => {
     await sut.execute({
       gymId: 'gym-01',
       userId: 'user-01',
-      userLongitude: 0,
-      userLatitude: 0,
+      userLatitude: -15.8000152,
+      userLongitude: -47.8667287,
     })
 
     vi.setSystemTime(new Date(2025, 0, 20, 9, 0, 0))
@@ -59,8 +59,8 @@ describe('Check-in Use Case', () => {
       sut.execute({
         gymId: 'gym-01',
         userId: 'user-01',
-        userLongitude: 0,
-        userLatitude: 0,
+        userLatitude: -15.8000152,
+        userLongitude: -47.8667287,
       }),
     ).rejects.toBeInstanceOf(Error) // TODO: Create a custom error (CheckInAlreadyExistsError)
   })
@@ -70,14 +70,42 @@ describe('Check-in Use Case', () => {
     await sut.execute({
       gymId: 'gym-01',
       userId: 'user-01',
+      userLatitude: -15.8000152,
+      userLongitude: -47.8667287,
     })
 
     vi.setSystemTime(new Date(2025, 0, 21, 8, 0, 0))
     const { checkIn } = await sut.execute({
       gymId: 'gym-01',
       userId: 'user-01',
+      userLatitude: -15.8000152,
+      userLongitude: -47.8667287,
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
+  })
+
+  it('should not be able to check in on distant gym', async () => {
+    // -15.8000152,-47.8667287
+    // -15.7946674,-47.8950178
+
+    // TODO: Remover quando criar o metodo create no repositorio
+    gymsRepository.items.push({
+      id: 'gym-02',
+      title: 'Academia 01',
+      description: 'Melhor academia de bairro',
+      phone: '123456789',
+      latitude: new Decimal(-15.8000152),
+      longitude: new Decimal(-47.8667287),
+    })
+
+    await expect(() =>
+      sut.execute({
+        gymId: 'gym-02',
+        userId: 'user-01',
+        userLongitude: -15.7946674,
+        userLatitude: -47.8950178,
+      }),
+    ).rejects.toBeInstanceOf(Error) // TODO: Create a custom error
   })
 })
