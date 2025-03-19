@@ -13,7 +13,14 @@
           <node negative="1">
             <node kind="database" qname="@" />
             <node kind="database" qname="apisolid">
-              <node kind="schema" negative="1" />
+              <node kind="schema" negative="1">
+                <name qname="30dd2124-4e3b-4cc3-a64d-35cabd7b22ef" />
+                <name qname="656e4ab9-0c38-4a8a-bc6a-f4a43f8077e0" />
+                <name qname="a7e5db1e-ea5c-4ab3-aa42-c3f7bc98869b" />
+                <name qname="bfebaf27-0058-4288-b7be-2769eeb3ec00" />
+                <name qname="d3263e15-7edb-44a1-b8c8-158f3f75dafc" />
+                <name qname="e1e9c1f1-3e0c-45cd-b32b-ee05f7d3e109" />
+              </node>
             </node>
           </node>
         </introspection-scope>
