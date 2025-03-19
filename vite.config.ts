@@ -8,5 +8,9 @@ export default defineConfig(async () => {
 
   return {
     plugins: [tsconfigPaths()],
+    test: {
+      environmentMatchGlobs: [['src/http/controllers/**', 'prisma']],
+      dir: 'src',
+    },
   }
 })
