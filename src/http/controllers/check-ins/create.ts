@@ -27,5 +27,5 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     gymId,
   })
 
-  return reply.status(200).send({ checkIn })
+  return reply.status(201).send({ checkIn })
 }
